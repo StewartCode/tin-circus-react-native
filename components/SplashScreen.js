@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+const textSize = width / 8 * 7;
+const textHeight = height / 100 * 70;
 
 export default class SplashScreen extends Component {
 

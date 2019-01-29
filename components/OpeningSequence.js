@@ -15,6 +15,7 @@ export default class OpeningSequence extends Component {
     return (
       <View style={styles.container}>
         <Video
+        repeat 
         source={OpeningVideo}
         resizeMode="cover"
         style={StyleSheet.absoluteFill}

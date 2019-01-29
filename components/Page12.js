@@ -14,13 +14,18 @@ import {
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+const textSize = width / 8 * 7;
+const textHeight = height / 100 * 70;
+const fontSizeAuto = height / 100 * 5.5;
 
 export default class Page12 extends Component {
 
 constructor(props){
   super(props);
   this.state = {
-    isShowingText: true
+    isShowingText: true,
+    pageNumber: 12,
+
   }
   this._onButtonClick = this._onButtonClick.bind(this)
 }
@@ -34,6 +39,9 @@ _onButtonClick(){
 Alert.alert('you pressed the button')
 }
 
+componentDidMount(){
+  this.props.pageNumberPass(this.state.pageNumber);
+}
 
 render() {
 
@@ -47,9 +55,7 @@ render() {
             <View style={styles.text}>
            <Text style={styles.textView}
              >And so the rain kept falling. It fell and it fell untill the people in the village
-           </Text>
-           <Text style={styles.textView}
-             > began to move away. No one wanted to live in a place where it rained all the time.
+             began to move away. No one wanted to live in a place where it rained all the time.
            </Text>
            </View>
          </ImageBackground>
@@ -76,14 +82,14 @@ const styles = StyleSheet.create({
   },
   text: {
     position: 'absolute',
-    top: 290,
+    top: textHeight,
     left: 0,
     right: 0,
-    bottom: 50,
+    bottom: 0,
     alignItems: 'center',
   },
   textView:{
-    fontSize: 22,
+    fontSize: fontSizeAuto,
     color: "white",
     fontWeight: 'bold',
     fontFamily: 'Cochin',
@@ -91,5 +97,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: {width: -1, height: 2},
     textShadowRadius: 1,
+    width: textSize,
+    height: height,
   }
 });

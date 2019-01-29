@@ -14,13 +14,18 @@ import {
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+const textSize = width / 8 * 7;
+const textHeight = height / 100 * 70;
+const fontSizeAuto = height / 100 * 5.5;
 
 export default class Page11 extends Component {
 
 constructor(props){
   super(props);
   this.state = {
-    isShowingText: true
+    isShowingText: true,
+    pageNumber: 11,
+
   }
   this._onButtonClick = this._onButtonClick.bind(this)
 }
@@ -34,6 +39,9 @@ _onButtonClick(){
 Alert.alert('you pressed the button')
 }
 
+componentDidMount(){
+  this.props.pageNumberPass(this.state.pageNumber);
+}
 
 render() {
 
@@ -42,8 +50,7 @@ render() {
       <View style={styles.logoContainer}>
         <ImageBackground
             source={require('../images/Page11.psd')}
-            style={styles.logo}
-            >
+            style={styles.logo}>
             <View style={styles.text}>
            <Text style={styles.textView}
              >But no matter how long he waited, Grady Fancy never wrote back.</Text>
@@ -72,14 +79,14 @@ const styles = StyleSheet.create({
   },
   text: {
     position: 'absolute',
-    top: 300,
+    top: textHeight,
     left: 0,
     right: 0,
-    bottom: 50,
+    bottom: 0,
     alignItems: 'center',
   },
   textView:{
-    fontSize: 22,
+    fontSize: fontSizeAuto,
     color: "white",
     fontWeight: 'bold',
     fontFamily: 'Cochin',
@@ -87,5 +94,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: {width: -1, height: 2},
     textShadowRadius: 1,
+    width: textSize,
+    height: height,
   }
 });

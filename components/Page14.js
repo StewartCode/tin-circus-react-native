@@ -14,13 +14,18 @@ import {
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+const textSize = width / 8 * 7;
+const textHeight = height / 100 * 65;
+const fontSizeAuto = height / 100 * 5.5;
 
 export default class Page14 extends Component {
 
 constructor(props){
   super(props);
   this.state = {
-    isShowingText: true
+    isShowingText: true,
+    pageNumber: 14,
+
   }
   this._onButtonClick = this._onButtonClick.bind(this)
 }
@@ -34,6 +39,9 @@ _onButtonClick(){
 Alert.alert('you pressed the button')
 }
 
+componentDidMount(){
+  this.props.pageNumberPass(this.state.pageNumber);
+}
 
 render() {
 
@@ -47,12 +55,8 @@ render() {
             <View style={styles.text}>
            <Text style={styles.textView}
              >To try and cheer Mr Caruthers up, Sinclair made mechanical birds and butterflies.
-           </Text>
-           <Text style={styles.textView}
-             >But Mr Caruthers would only would only smile to be kind,
-           </Text>
-           <Text style={styles.textView}
-             >before drifting off into another distant memory.
+             But Mr Caruthers would only would only smile to be kind,
+             before drifting off into another distant memory.
            </Text>
            </View>
          </ImageBackground>
@@ -79,20 +83,22 @@ const styles = StyleSheet.create({
   },
   text: {
     position: 'absolute',
-    top: 270,
+    top: textHeight,
     left: 0,
     right: 0,
-    bottom: 50,
+    bottom: 0,
     alignItems: 'center',
   },
   textView:{
-    fontSize: 22,
-    color: "black",
+    fontSize: fontSizeAuto,
+    color: "white",
     fontWeight: 'bold',
     fontFamily: 'Cochin',
     justifyContent: 'center',
-    textShadowColor: 'rgba(255, 255, 255, 255 )',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: {width: -1, height: 2},
     textShadowRadius: 1,
+    width: textSize,
+    height: height,
   }
 });

@@ -3,6 +3,9 @@ import { Button, ThemeProvider } from 'react-native-elements';
 import HeavyBucket from '../components/HeavyBucket'
 import SplashScreen from '../components/SplashScreen'
 import OpeningSequence from '../components/OpeningSequence'
+import SomeComponent from '../components/SomeComponent'
+import FromSwipe from '../components/FromSwipe'
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures'
 import Title from '../components/Title'
 import Page1 from '../components/Page1'
 import Page2 from '../components/Page2'
@@ -35,7 +38,9 @@ import {
   View,
   Text,
   Alert,
+  AppRegistry,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 
 import soundfile1 from '../audio/pageTurnFast.wav'
@@ -43,7 +48,8 @@ import soundfile2 from '../audio/pageTurnSlow.wav'
 import soundfile3 from '../audio/rainFx.mp3'
 
 
-// let pageTurnFast = new Audio(soundfile1);
+const { width, height } = Dimensions.get('window');
+const textSize = width / 2;
 
 
 export default class TinCircus extends Component {
@@ -53,30 +59,75 @@ export default class TinCircus extends Component {
 constructor(props) {
   super(props);
   this.state = {
-    pageNumber: 1,
+    pageNumber: 16,
+    direction: this.props.direction,
+    back: null,
+    forwards: this.props.forwardsFromApp,
+    pageNumberFromPage: null,
   };
   this._onButtonClick = this._onButtonClick.bind(this)
   this._onBackClick = this._onBackClick.bind(this)
+  this.twoClicksForwards = this.twoClicksForwards.bind(this)
+  this.twoClickBackwards = this.twoClickBackwards.bind(this)
+  this.upstreamForwards = this.upstreamForwards.bind(this)
 }
-
-
 
 
 _onButtonClick(){
   let prevPage = this.state.pageNumber
   this.setState(() => {
-    return {pageNumber: prevPage + 1}
+    return {pageNumber: prevPage + 1
+           }
   })
 }
-
 _onBackClick(){
   let prevPage = this.state.pageNumber
   this.setState(() => {
-    return {pageNumber: prevPage - 1}
+    return {pageNumber: prevPage - 1
+           }
   })
 }
 
+twoClicksForwards(){
+   this._onButtonClick();
+   this.upstreamForwards();
+
+}
+
+twoClickBackwards(){
+   this._onBackClick();
+   this.upstreamForwards();
+
+}
+
+upstreamForwards(){
+  this.props.upStreamToApp();  //resets swipe direction to null
+}
+
+
+pageNumberPass(x){
+console.log('wtf is this????',x);
+}
+
+
+componentDidUpdate(prevState){
+  if(this.props.direction === 'right'){
+      this.twoClicksForwards();
+  }
+  if(this.props.direction === 'left'){
+      this.twoClickBackwards();
+  }
+}
+
+componentDidMount(){
+  this.props.pageNumberToApp();
+}
+
   render() {
+
+
+
+    console.log("find me", this.props.direction);
 
     if(this.state.pageNumber === 29){
       setTimeout(() => {this.setState({pageNumber: 1.5})}, 6000)
@@ -117,7 +168,7 @@ _onBackClick(){
                 <ThemeProvider>
                   <Button
                     title="Start"
-                    onPress={this._onButtonClick}
+                    onPress={this.twoClicksForwards}
                     />
                 </ThemeProvider>
           </View>
@@ -125,13 +176,15 @@ _onBackClick(){
       }else if(this.state.pageNumber === 4){
         return(
           <View style={styles.container}>
-              <Page1/>
+              <Page1
+               pageNumberPass={this.pageNumberPass}
+                />
               <View style={styles.bothButtons}>
                 <View style={styles.backContainer}>
                <ThemeProvider theme={theme}>
                  <Button
                    title="Back"
-                   onPress={this._onBackClick}
+                   onPress={this.twoClickBackwards}
                    />
                </ThemeProvider>
                  </View>
@@ -140,7 +193,7 @@ _onBackClick(){
                 <ThemeProvider theme={theme}>
                   <Button
                     title="Next Page"
-                    onPress={this._onButtonClick}
+                    onPress={this.twoClicksForwards}
                     />
                 </ThemeProvider>
                   </View>
@@ -150,13 +203,15 @@ _onBackClick(){
       }else if(this.state.pageNumber === 5){
         return(
           <View style={styles.container}>
-              <Page2/>
+              <Page2
+                pageNumberPass={this.pageNumberPass}
+                />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -165,7 +220,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -175,13 +230,15 @@ _onBackClick(){
       }else if(this.state.pageNumber === 6){
         return(
           <View style={styles.container}>
-              <Page3/>
+              <Page3
+               pageNumberPass={this.pageNumberPass}
+                />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -190,7 +247,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -201,13 +258,15 @@ _onBackClick(){
       }else if(this.state.pageNumber === 7){
         return(
           <View style={styles.container}>
-              <Page4/>
+            <Page4
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -216,7 +275,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -226,13 +285,15 @@ _onBackClick(){
       }else if(this.state.pageNumber === 8){
         return(
           <View style={styles.container}>
-              <Page5/>
+            <Page5
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -241,7 +302,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -251,13 +312,15 @@ _onBackClick(){
       }else if(this.state.pageNumber === 9){
         return(
           <View style={styles.container}>
-              <Page6/>
+            <Page6
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -266,7 +329,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -276,13 +339,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 10){
         return(
           <View style={styles.container}>
-              <Page7/>
+            <Page7
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -291,7 +356,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -301,13 +366,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 11){
         return(
           <View style={styles.container}>
-              <Page8/>
+            <Page8
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -316,7 +383,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -326,13 +393,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 12){
         return(
           <View style={styles.container}>
-              <Page9/>
+            <Page9
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -341,7 +410,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -351,13 +420,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 13){
         return(
           <View style={styles.container}>
-              <Page10/>
+            <Page10
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -366,7 +437,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -376,13 +447,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 14){
         return(
           <View style={styles.container}>
-              <Page11/>
+            <Page11
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -391,7 +464,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -401,13 +474,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 15){
         return(
           <View style={styles.container}>
-              <Page12/>
+            <Page12
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -416,7 +491,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -426,13 +501,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 16){
         return(
           <View style={styles.container}>
-              <Page13/>
+            <Page13
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -441,7 +518,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -451,13 +528,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 17){
         return(
           <View style={styles.container}>
-              <Page14/>
+            <Page14
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -466,7 +545,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -476,13 +555,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 18){
         return(
           <View style={styles.container}>
-              <Page15/>
+            <Page15
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -491,7 +572,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -501,13 +582,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 19){
         return(
           <View style={styles.container}>
-              <Page16/>
+            <Page16
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -516,7 +599,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -526,13 +609,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 20){
         return(
           <View style={styles.container}>
-              <Page17/>
+            <Page17
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -541,7 +626,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -551,13 +636,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 21){
         return(
           <View style={styles.container}>
-              <Page18/>
+            <Page18
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -566,7 +653,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -576,13 +663,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 22){
         return(
           <View style={styles.container}>
-              <Page19/>
+            <Page19
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -591,7 +680,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -601,13 +690,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 23){
         return(
           <View style={styles.container}>
-              <Page20/>
+            <Page20
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -616,7 +707,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -626,13 +717,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 24){
         return(
           <View style={styles.container}>
-              <Page21/>
+            <Page21
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -641,7 +734,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -651,13 +744,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 25){
         return(
           <View style={styles.container}>
-              <Page22/>
+            <Page22
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -666,7 +761,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -676,13 +771,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 26){
         return(
           <View style={styles.container}>
-              <Page23/>
+            <Page23
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -691,7 +788,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -701,13 +798,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 27){
         return(
           <View style={styles.container}>
-              <Page24/>
+            <Page24
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -716,7 +815,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -726,13 +825,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 28){
         return(
           <View style={styles.container}>
-              <Page25/>
+            <Page25
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -741,7 +842,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -751,13 +852,15 @@ _onBackClick(){
         }else if(this.state.pageNumber === 29){
         return(
           <View style={styles.container}>
-              <Page26/>
+            <Page26
+             pageNumberPass={this.pageNumberPass}
+              />
                 <View style={styles.bothButtons}>
                   <View style={styles.backContainer}>
                  <ThemeProvider theme={theme}>
                    <Button
                      title="Back"
-                     onPress={this._onBackClick}
+                     onPress={this.twoClickBackwards}
                      />
                  </ThemeProvider>
                    </View>
@@ -766,7 +869,7 @@ _onBackClick(){
                   <ThemeProvider theme={theme}>
                     <Button
                       title="Next Page"
-                      onPress={this._onButtonClick}
+                      onPress={this.twoClicksForwards}
                       />
                   </ThemeProvider>
                     </View>
@@ -776,7 +879,27 @@ _onBackClick(){
         }else if(this.state.pageNumber === 30){
         return(
           <View style={styles.container}>
-              <Page27/>
+            <Page27
+             pageNumberPass={this.pageNumberPass}
+              />
+          </View>
+          )
+        }else if(this.state.pageNumber === 31){
+        return(
+          <View style={styles.container}>
+              <SomeComponent/>
+          </View>
+          )
+        }else if(this.state.pageNumber === 32){
+        return(
+          <View style={styles.container}>
+              <FromSwipe/>
+              <SomeComponent/>
+                <View style={styles.text}>
+                <Text style={styles.textView}
+                 >
+                </Text>
+               </View>
           </View>
           )
         }
@@ -796,6 +919,10 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     opacity: 1,
+    width,
+    height,
+    resizeMode: 'contain',
+    color: "white",
   },
   startButton: {
     opacity: 0.1,
@@ -808,8 +935,13 @@ const styles = StyleSheet.create({
 
   },
   bothButtons: {
-    backgroundColor: "black",
+    backgroundColor: "transparent",
     flexDirection: 'row',
     justifyContent: 'center'
   },
+  textView:{
+    color: 'white',
+  },
 });
+
+AppRegistry.registerComponent('TinCircus', () => TinCircus);
