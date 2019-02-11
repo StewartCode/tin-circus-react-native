@@ -13,15 +13,15 @@ import {
   StyleSheet,
 } from 'react-native';
 
-export default class Title extends Component {
+export default class MinusOne extends Component {
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Image
-              source={require('../images/splashPage.psd')}
-              style={styles.logo}
-              />
+          <Text
+              style={styles.text}
+              > Tin Circus Development Build V 0.1
+              </Text>
           </View>
       </View>
     );
@@ -38,9 +38,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  logo: {
-    width: 500,
-    height: 500,
-    resizeMode: 'contain'
+  text: {
+    color: 'white'
   },
 });

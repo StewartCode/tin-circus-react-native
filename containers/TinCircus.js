@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ThemeProvider } from 'react-native-elements';
+import MinusOne from '../components/MinusOne'
 import HeavyBucket from '../components/HeavyBucket'
 import SplashScreen from '../components/SplashScreen'
 import OpeningSequence from '../components/OpeningSequence'
@@ -50,6 +51,9 @@ import soundfile3 from '../audio/rainFx.mp3'
 
 const { width, height } = Dimensions.get('window');
 const textSize = width / 2;
+const buttonHeight = height / 100 * 4.5
+const buttonWidth = width / 100 * 15
+const gap = width / 100 * 70
 
 
 export default class TinCircus extends Component {
@@ -59,7 +63,7 @@ export default class TinCircus extends Component {
 constructor(props) {
   super(props);
   this.state = {
-    pageNumber: 16,
+    pageNumber: 1,
     direction: this.props.direction,
     back: null,
     forwards: this.props.forwardsFromApp,
@@ -70,6 +74,7 @@ constructor(props) {
   this.twoClicksForwards = this.twoClicksForwards.bind(this)
   this.twoClickBackwards = this.twoClickBackwards.bind(this)
   this.upstreamForwards = this.upstreamForwards.bind(this)
+  this.delayOnOne = this.delayOnOne.bind(this)
 }
 
 
@@ -100,6 +105,34 @@ twoClickBackwards(){
 
 }
 
+delayOnOne(){
+  if(this.state.pageNumber === 1){
+    {this.setState({pageNumber: 1.5})}
+  }
+}
+
+delayOnOnePointFive(){
+  if(this.state.pageNumber === 1.5){
+    {this.setState({pageNumber: 2})}
+  }
+}
+
+delayThree(){
+  if(this.state.pageNumber === 3){
+    {this.setState({pageNumber: 4})}
+  }
+}
+
+delayTwentyNine(){
+  if(this.state.pageNumber > 28 ){
+    {this.setState({pageNumber: 2})}
+  }
+}
+
+setPageToTwo(){
+  {this.setState({pageNumber: 2})}
+}
+
 upstreamForwards(){
   this.props.upStreamToApp();  //resets swipe direction to null
 }
@@ -125,21 +158,23 @@ componentDidMount(){
 
   render() {
 
-
-
     console.log("find me", this.props.direction);
 
-    if(this.state.pageNumber === 29){
-      setTimeout(() => {this.setState({pageNumber: 1.5})}, 6000)
+    if(this.state.pageNumber < -1){
+      this.setPageToTwo()
+    }
+
+    if(this.state.pageNumber > 28){
+      setTimeout(() => this.delayTwentyNine(), 6000)
     }
     if(this.state.pageNumber === 1 ){
-      setTimeout(() => {this.setState({pageNumber: 1.5})}, 10000)
+      setTimeout(() => this.delayOnOne(), 10000)
     }
     if(this.state.pageNumber === 1.5 ){
-      setTimeout(() => {this.setState({pageNumber: 2})}, 3000)
+      setTimeout(() => this.delayOnOnePointFive(), 3000)
     }
     if(this.state.pageNumber === 3 ){
-      setTimeout(() => {this.setState({pageNumber: 4})}, 16000)
+      setTimeout(() => this.delayThree(), 16000)
     }
 
 
@@ -149,16 +184,16 @@ componentDidMount(){
               <HeavyBucket/>
           </View>
           )
+    }else if(this.state.pageNumber < 1 || this.state.pageNumber > 32){
+        return(
+          <View style={styles.container}>
+              <MinusOne/>
+          </View>
+          )
     }else if(this.state.pageNumber === 1.5){
         return(
           <View style={styles.container}>
               <Title/>
-          </View>
-          )
-    }else if(this.state.pageNumber === 3){
-        return(
-          <View style={styles.container}>
-              <OpeningSequence/>
           </View>
           )
     }else if(this.state.pageNumber === 2){
@@ -173,6 +208,12 @@ componentDidMount(){
                 </ThemeProvider>
           </View>
           )
+      }else if(this.state.pageNumber === 3){
+          return(
+            <View style={styles.container}>
+                <OpeningSequence/>
+            </View>
+            )
       }else if(this.state.pageNumber === 4){
         return(
           <View style={styles.container}>
@@ -188,7 +229,7 @@ componentDidMount(){
                    />
                </ThemeProvider>
                  </View>
-                 <Text>                                                        </Text>
+                 <Text style={styles.gap}></Text>
                  <View style={styles.buttonContainer}>
                 <ThemeProvider theme={theme}>
                   <Button
@@ -215,7 +256,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -242,7 +283,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -270,7 +311,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -297,7 +338,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -324,7 +365,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -351,7 +392,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -378,7 +419,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -405,7 +446,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -432,7 +473,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -459,7 +500,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -486,7 +527,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -513,7 +554,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -540,7 +581,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -567,7 +608,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -594,7 +635,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -621,7 +662,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -648,7 +689,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -675,7 +716,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -702,7 +743,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -729,7 +770,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -756,7 +797,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -783,7 +824,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -810,7 +851,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -837,7 +878,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -864,7 +905,7 @@ componentDidMount(){
                      />
                  </ThemeProvider>
                    </View>
-                   <Text>                                                        </Text>
+                   <Text style={styles.gap}></Text>
                    <View style={styles.buttonContainer}>
                   <ThemeProvider theme={theme}>
                     <Button
@@ -887,21 +928,25 @@ componentDidMount(){
         }else if(this.state.pageNumber === 31){
         return(
           <View style={styles.container}>
-              <SomeComponent/>
+            <MinusOne/>
+             <View style={styles.text}>
+             <Text style={styles.textView}
+              >
+             </Text>
+            </View>
           </View>
           )
         }else if(this.state.pageNumber === 32){
-        return(
-          <View style={styles.container}>
-              <FromSwipe/>
-              <SomeComponent/>
-                <View style={styles.text}>
-                <Text style={styles.textView}
-                 >
-                </Text>
-               </View>
-          </View>
-          )
+          return(
+            <View style={styles.container}>
+              <MinusOne/>
+               <View style={styles.text}>
+               <Text style={styles.textView}
+                >
+               </Text>
+              </View>
+            </View>
+            )
         }
     }
 }
@@ -929,15 +974,23 @@ const styles = StyleSheet.create({
     width: 20,
   },
   buttonContainer: {
+    width: buttonWidth,
+    height: buttonHeight,
+    marginBottom: 1,
 
   },
   backContainer: {
+    width: buttonWidth,
+    height: buttonHeight,
 
   },
   bothButtons: {
     backgroundColor: "transparent",
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+  },
+  gap:{
+    width: gap,
   },
   textView:{
     color: 'white',

@@ -15,7 +15,6 @@ export default class FromSwipe extends Component {
     }
   }
 
-
   componentDidMount(){
     this.setState(() => {
       return {text: this.props.pass}

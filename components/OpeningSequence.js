@@ -1,5 +1,7 @@
 /* @flow */
 
+//3
+
 import React, { Component } from 'react';
 import {
   View,
@@ -15,7 +17,7 @@ export default class OpeningSequence extends Component {
     return (
       <View style={styles.container}>
         <Video
-        repeat 
+        repeat
         source={OpeningVideo}
         resizeMode="cover"
         style={StyleSheet.absoluteFill}

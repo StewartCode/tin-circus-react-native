@@ -1,5 +1,7 @@
 /* @flow */
 
+//4
+
 import React, { Component } from 'react';
 import { Button, ThemeProvider } from 'react-native-elements';
 import {
@@ -15,8 +17,8 @@ import {
 
 const { width, height } = Dimensions.get('window');
 const textSize = width / 8 * 7;
-const textHeight = height / 100 * 70;
-const fontSizeAuto = height / 100 * 5.5;
+const textHeight = height / 100 * 85;
+const fontSizeAuto = height / 100 * 4;
 
 
 export default class Page1 extends Component {
